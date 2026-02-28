@@ -1,21 +1,41 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { staggerContainer, cardPopIn } from "@/lib/animations";
 
-const videos = [
-  "dQw4w9WgXcQ",
-  "ysz5S6PUM-U",
-  "tgbNymZ7vqY",
-  "jNQXAC9IVRw",
+const reviews = [
+  {
+    name: "Mohini Chandrakant",
+    text: "Provides excellent guidance and quality education. Teaching methodology is clear, concept-oriented and easy to understand. Faculty is supportive and gives individual attention.",
+  },
+  {
+    name: "Shanta Mathapati",
+    text: "My son has been studying here since 1st standard. I have seen big improvement. Special thanks to Swapnali Ma’am.",
+  },
+  {
+    name: "Deepali Bhelke",
+    text: "Excellent teaching style. Very patient explanations. Helps understand tough topics easily. Always well-prepared and energetic.",
+  },
+  {
+    name: "Ajay Shedge",
+    text: "This class focuses on every student. Faculty is well qualified and experienced.",
+  },
+  {
+    name: "Shital Rikibe",
+    text: "Best tuition classes. Good study environment with expert teachers.",
+  },
+  {
+    name: "Pranav Shinde",
+    text: "All teachers are experts and give attention to individual students. Extra efforts are always taken.",
+  },
 ];
 
 const TestimonialsSection = () => {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const prevIndex = (active - 1 + videos.length) % videos.length;
-  const nextIndex = (active + 1) % videos.length;
+  const prevIndex = (active - 1 + reviews.length) % reviews.length;
+  const nextIndex = (active + 1) % reviews.length;
 
   const next = () => setActive(nextIndex);
   const prev = () => setActive(prevIndex);
@@ -41,22 +61,21 @@ const TestimonialsSection = () => {
             variants={cardPopIn}
             className="inline-flex items-center bg-brand-orange/10 text-brand-orange font-semibold text-sm px-4 py-2 rounded-full mb-4"
           >
-            Student Stories
+            Google Reviews
           </motion.div>
 
           <motion.h2
             variants={cardPopIn}
             className="text-3xl lg:text-4xl font-bold text-brand-navy mb-3"
           >
-            What Our Students & Parents Say
+            What Parents & Students Say
           </motion.h2>
 
           <motion.p
             variants={cardPopIn}
             className="text-muted-foreground max-w-xl mx-auto"
           >
-            Real experiences shared by our students and parents that reflect
-            the impact of our coaching and mentorship.
+            Real feedback shared by parents and students about their learning experience.
           </motion.p>
         </motion.div>
 
@@ -66,7 +85,7 @@ const TestimonialsSection = () => {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          {/* Arrow Left */}
+          {/* Left Arrow */}
           <button
             onClick={prev}
             className="absolute left-0 z-20 bg-white shadow rounded-full p-2"
@@ -74,40 +93,23 @@ const TestimonialsSection = () => {
             <ChevronLeft className="w-5 h-5 text-brand-navy" />
           </button>
 
-          {/* Prev video */}
-          <div className="w-[22%] opacity-60 scale-90">
-            <iframe
-              className="w-full aspect-video rounded-xl"
-              src={`https://www.youtube.com/embed/${videos[prevIndex]}?mute=1`}
-              allow="autoplay; encrypted-media"
-            />
-          </div>
+          {/* Previous Card */}
+          <ReviewCard review={reviews[prevIndex]} small />
 
-          {/* Active video */}
+          {/* Active Card */}
           <motion.div
             key={active}
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             className="w-[52%]"
           >
-            <iframe
-              className="w-full aspect-video rounded-2xl shadow-card"
-              src={`https://www.youtube.com/embed/${videos[active]}?autoplay=1&mute=1&loop=1&playlist=${videos[active]}`}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-            />
+            <ReviewCard review={reviews[active]} />
           </motion.div>
 
-          {/* Next video */}
-          <div className="w-[22%] opacity-60 scale-90">
-            <iframe
-              className="w-full aspect-video rounded-xl"
-              src={`https://www.youtube.com/embed/${videos[nextIndex]}?mute=1`}
-              allow="autoplay; encrypted-media"
-            />
-          </div>
+          {/* Next Card */}
+          <ReviewCard review={reviews[nextIndex]} small />
 
-          {/* Arrow Right */}
+          {/* Right Arrow */}
           <button
             onClick={next}
             className="absolute right-0 z-20 bg-white shadow rounded-full p-2"
@@ -118,7 +120,7 @@ const TestimonialsSection = () => {
 
         {/* Dots */}
         <div className="flex justify-center gap-3 mt-6">
-          {videos.map((_, i) => (
+          {reviews.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
@@ -130,6 +132,32 @@ const TestimonialsSection = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const ReviewCard = ({ review, small = false }: any) => {
+  return (
+    <div
+      className={`${
+        small ? "w-[22%] opacity-60 scale-90" : ""
+      } transition-all`}
+    >
+      <div className="bg-white rounded-2xl shadow-card p-6 h-full">
+        <div className="flex items-center gap-1 mb-3 text-yellow-500">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-4 h-4 fill-yellow-500" />
+          ))}
+        </div>
+
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          {review.text}
+        </p>
+
+        <h4 className="font-semibold text-brand-navy">
+          {review.name}
+        </h4>
+      </div>
+    </div>
   );
 };
 

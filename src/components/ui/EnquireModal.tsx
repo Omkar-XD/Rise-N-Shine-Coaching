@@ -1,8 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -19,8 +18,7 @@ interface EnquireModalProps {
 
 const EnquireModal = ({ isOpen, onClose }: EnquireModalProps) => {
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [category, setCategory] = useState("");
   const [board, setBoard] = useState("");
   const [standard, setStandard] = useState("");
@@ -28,8 +26,6 @@ const EnquireModal = ({ isOpen, onClose }: EnquireModalProps) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSuccessMessage(null);
-    setErrorMessage(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -37,166 +33,183 @@ const EnquireModal = ({ isOpen, onClose }: EnquireModalProps) => {
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
-    const message = formData.get("message") as string;
+    const message = (formData.get("message") as string) || "";
 
-    // ⭐ VALIDATIONS
-    if (!name || !email || !phone || !message || !category || !board || !standard || !city) {
-      alert("Please fill all fields correctly.");
-      return;
-    }
-
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    if (!/^\d{10}$/.test(phone)) {
-      alert("Phone number must be exactly 10 digits.");
+    if (!name || !email || !phone || !category || !board || !standard || !city) {
+      alert("Please complete all required fields.");
       return;
     }
 
     const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
-    if (!accessKey) {
-      setErrorMessage("Form not configured");
-      return;
-    }
 
     const formattedMessage = `
-New Coaching Enquiry – Rise N Shine Coaching
+RISE N SHINE COACHING
+New Admission Enquiry
 
-Student Details
+STUDENT DETAILS
 Name: ${name}
-Email: ${email}
 Phone: ${phone}
+Email: ${email}
 
-Academic Details
-Category: ${category}
+ACADEMIC DETAILS
+Program: ${category}
 Board: ${board}
-Standard: ${standard}
-
-Location
+Class: ${standard}
 City: ${city}
 
-Message
-${message}
+Message:
+${message || "Not provided"}
 `;
 
     formData.set("access_key", accessKey);
-    formData.set("subject", `New Enquiry from ${name}`);
-    formData.set("from_name", "Rise N Shine Coaching Website");
-    formData.set("replyto", email);
+    formData.set("subject", "Rise N Shine Coaching | New Admission Enquiry");
     formData.set("message", formattedMessage);
     formData.set("email_to", "swapnalimore3020@gmail.com");
 
     try {
       setLoading(true);
-      const res = await fetch("https://api.web3forms.com/submit", {
+      await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
 
-      if (data.success) {
-        setSuccessMessage("Enquiry sent successfully");
-        form.reset();
-        setCategory("");
-        setBoard("");
-        setStandard("");
-        setCity("");
-      } else {
-        setErrorMessage("Something went wrong");
-      }
-    } catch {
-      setErrorMessage("Network error");
+      form.reset();
+      setCategory("");
+      setBoard("");
+      setStandard("");
+      setCity("");
+      onClose();
     } finally {
       setLoading(false);
     }
   };
 
-  const inputStyle = "border border-gray-400 focus:border-gray-700";
-
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
+          {/* Overlay */}
+          <motion.div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+            onClick={onClose}
+          />
 
-          <motion.div className="fixed right-0 top-0 h-screen bg-white z-50 w-full md:w-[60vw] flex flex-col justify-center px-6 md:px-10">
-            <button onClick={onClose} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full bg-orange-500 text-white p-2 rounded-full">
-              <X />
-            </button>
+          {/* RIGHT PANEL */}
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.35 }}
+            className="fixed right-0 top-0 h-screen w-full md:w-[60vw] bg-white z-50 shadow-2xl flex flex-col justify-center"
+          >
+            <div className="px-10 md:px-16 py-14 relative h-full flex flex-col justify-center">
+              
+              {/* Close */}
+              <button
+                onClick={onClose}
+                className="absolute top-8 right-8 bg-gray-100 hover:bg-gray-200 p-2 rounded-full"
+              >
+                <X size={18} />
+              </button>
 
-            <h2 className="text-3xl font-bold text-center mb-6">
-              <span className="text-brand-navy">Enquire </span>Now
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div><Label>Name</Label><Input name="name" required className={inputStyle} /></div>
-                <div><Label>Email</Label><Input name="email" type="email" required className={inputStyle} /></div>
-                <div><Label>Phone</Label><Input name="phone" maxLength={10} required className={inputStyle} /></div>
-
-                <div>
-                  <Label>Category</Label>
-                  <Select onValueChange={setCategory}>
-                    <SelectTrigger className={inputStyle}><SelectValue placeholder="Select" /></SelectTrigger>
-                    <SelectContent>
-                      {["Foundation","IIT-JEE","NEET","Crash Course","Olympiad","Board Prep"].map(c => (
-                        <SelectItem key={c} value={c}>{c}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Board</Label>
-                  <Select onValueChange={setBoard}>
-                    <SelectTrigger className={inputStyle}><SelectValue placeholder="Select" /></SelectTrigger>
-                    <SelectContent>
-                      {["SSC","CBSE"].map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Standard</Label>
-                  <Select onValueChange={setStandard}>
-                    <SelectTrigger className={inputStyle}><SelectValue placeholder="Select" /></SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 10 }, (_, i) => `Class ${i+1}`).map(s => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>City</Label>
-                  <Select onValueChange={setCity}>
-                    <SelectTrigger className={inputStyle}><SelectValue placeholder="Select" /></SelectTrigger>
-                    <SelectContent>
-                      {["Pune","Mumbai","Nagpur","Kolhapur","Nashik","Other"].map(c => (
-                        <SelectItem key={c} value={c}>{c}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              {/* Heading */}
+              <div className="mb-10">
+                <h2 className="text-4xl font-bold text-brand-navy mb-3">
+                  Admission Enquiry
+                </h2>
+                <p className="text-gray-500 text-base">
+                  Fill in the details below and our academic team will contact you shortly.
+                </p>
               </div>
 
-              <div>
-                <Label>Message</Label>
-                <Textarea name="message" required className={`min-h-[80px] ${inputStyle}`} />
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-8">
 
-              <div className="flex flex-col items-center gap-2">
-                <button type="submit" disabled={loading} className="bg-blue-600 text-white px-8 py-3 rounded-full flex items-center gap-2">
-                  {loading ? <Loader2 className="animate-spin" /> : "Submit"}
-                </button>
+                {/* STUDENT INFO */}
+                <div className="space-y-6">
+                  <h3 className="text-sm font-semibold tracking-wider text-gray-600 uppercase">
+                    Student Information
+                  </h3>
 
-                {successMessage && <p className="text-green-600">{successMessage}</p>}
-                {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-              </div>
-            </form>
+                  <div className="grid grid-cols-2 gap-6">
+                    <Input name="name" placeholder="Full Name" required className="h-12 rounded-lg" />
+                    <Input name="phone" placeholder="Phone Number" maxLength={10} required className="h-12 rounded-lg" />
+                    <Input name="email" type="email" placeholder="Email Address" required className="h-12 rounded-lg" />
+
+                    <Select onValueChange={setCity}>
+                      <SelectTrigger className="h-12 rounded-lg">
+                        <SelectValue placeholder="Select City" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Pune","Mumbai","Nagpur","Other"].map(c => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* ACADEMIC INFO */}
+                <div className="space-y-6">
+                  <h3 className="text-sm font-semibold tracking-wider text-gray-600 uppercase">
+                    Academic Details
+                  </h3>
+
+                  <div className="grid grid-cols-3 gap-6">
+                    <Select onValueChange={setCategory}>
+                      <SelectTrigger className="h-12 rounded-lg">
+                        <SelectValue placeholder="Program" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Foundation","NEET","IIT-JEE","Board Prep"].map(c => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select onValueChange={setBoard}>
+                      <SelectTrigger className="h-12 rounded-lg">
+                        <SelectValue placeholder="Board" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["SSC","CBSE"].map(b => (
+                          <SelectItem key={b} value={b}>{b}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select onValueChange={setStandard}>
+                      <SelectTrigger className="h-12 rounded-lg">
+                        <SelectValue placeholder="Class" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({ length: 10 }, (_, i) => `Class ${i+1}`).map(s => (
+                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* MESSAGE */}
+                <Textarea
+                  name="message"
+                  placeholder="Additional message (optional)"
+                  className="min-h-[110px] rounded-lg"
+                />
+
+                {/* SUBMIT */}
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-brand-navy hover:bg-brand-navy/90 text-white py-4 rounded-full text-lg font-semibold shadow-lg transition-all"
+                  >
+                    {loading ? <Loader2 className="animate-spin inline mr-2" /> : "Submit Enquiry"}
+                  </button>
+                </div>
+
+              </form>
+            </div>
           </motion.div>
         </>
       )}
