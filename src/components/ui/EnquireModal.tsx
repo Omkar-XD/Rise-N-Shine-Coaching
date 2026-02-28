@@ -45,23 +45,30 @@ const EnquireModal = ({ isOpen, onClose }: EnquireModalProps) => {
     const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
     const formattedMessage = `
-RISE N SHINE COACHING
+╔══════════════════════════════════════╗
+      🌅 RISE N SHINE COACHING
+        New Admission Enquiry
+╚══════════════════════════════════════╝
 
-New Admission Enquiry
+👤 STUDENT DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Name    : ${name}
+- Phone   : ${phone}
+- Email   : ${email}
 
-STUDENT DETAILS
-Name: ${name}
-Phone: ${phone}
-Email: ${email}
+📚 ACADEMIC DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Program : ${category}
+- Board   : ${board}
+- Class   : ${standard}
+- City    : ${city}
 
-ACADEMIC DETAILS
-Program: ${category}
-Board: ${board}
-Class: ${standard}
-City: ${city}
-
-Message:
+💬 MESSAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${message || "Not provided"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 Received on: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
 `;
 
     formData.set("access_key", accessKey);
@@ -89,7 +96,7 @@ ${message || "Not provided"}
       } else {
         setShowError(true);
       }
-    } catch (error) {
+    } catch {
       setShowError(true);
     } finally {
       setLoading(false);
@@ -102,14 +109,16 @@ ${message || "Not provided"}
       <AnimatePresence>
         {showSuccess && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 flex items-center justify-center bg-black/40 z-[60]"
           >
             <div className="bg-white rounded-2xl p-8 text-center w-[90%] max-w-md shadow-xl">
               <CheckCircle className="mx-auto text-green-500 mb-4" size={48} />
-              <h3 className="text-2xl font-bold mb-2">Enquiry Sent Successfully!</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                Enquiry Sent Successfully!
+              </h3>
               <p className="text-gray-600 mb-6">
                 Our academic team will contact you shortly.
               </p>
@@ -153,7 +162,7 @@ ${message || "Not provided"}
         )}
       </AnimatePresence>
 
-      {/* ORIGINAL MODAL */}
+      {/* MAIN MODAL */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -187,10 +196,67 @@ ${message || "Not provided"}
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
+
+                  {/* STUDENT INFO */}
                   <div className="grid grid-cols-2 gap-6">
                     <Input name="name" placeholder="Full Name" required />
                     <Input name="phone" placeholder="Phone Number" required />
                     <Input name="email" type="email" placeholder="Email Address" required />
+
+                    <Select onValueChange={setCity}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select City" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Pune", "Mumbai", "Nagpur", "Other"].map((c) => (
+                          <SelectItem key={c} value={c}>
+                            {c}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* ACADEMIC INFO */}
+                  <div className="grid grid-cols-3 gap-6">
+                    <Select onValueChange={setCategory}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Program" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Foundation", "NEET", "IIT-JEE", "Board Prep"].map((c) => (
+                          <SelectItem key={c} value={c}>
+                            {c}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select onValueChange={setBoard}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Board" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["SSC", "CBSE"].map((b) => (
+                          <SelectItem key={b} value={b}>
+                            {b}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select onValueChange={setStandard}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Class" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({ length: 10 }, (_, i) => `Class ${i + 1}`).map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <Textarea name="message" placeholder="Additional message (optional)" />
@@ -200,7 +266,11 @@ ${message || "Not provided"}
                     disabled={loading}
                     className="w-full bg-brand-navy text-white py-4 rounded-full"
                   >
-                    {loading ? <Loader2 className="animate-spin inline mr-2" /> : "Submit Enquiry"}
+                    {loading ? (
+                      <Loader2 className="animate-spin inline mr-2" />
+                    ) : (
+                      "Submit Enquiry"
+                    )}
                   </button>
                 </form>
               </div>
