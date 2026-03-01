@@ -97,7 +97,7 @@ const LegacySection = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              src="/assets/images/student-class.webp"
+              src="/assets/images/student-class.jpeg"
               alt="Students in classroom"
               className="rounded-2xl shadow-xl object-cover w-full h-[350px] lg:h-[400px]"
             />

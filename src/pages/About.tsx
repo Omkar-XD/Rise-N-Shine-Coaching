@@ -16,7 +16,7 @@ const teachers = [
     subject: "Physics and Chemistry",
     description:
       "10+ years of experience delivering concept-based Physics & Chemistry teaching with practical examples, exam strategies, and strong doubt-solving focus.",
-    image: "/assets/images/teacher-1.png",
+    image: "/assets/images/teacher-1.jpeg",
   },
   {
     name: "Mrs. Sharyu Patil",
@@ -24,7 +24,7 @@ const teachers = [
     subject: "Language Teacher",
     description:
       "Passionate language educator helping students master grammar, reading comprehension, and confident written and spoken communication.",
-    image: "/assets/images/teacher-2.png",
+    image: "/assets/images/teacher-2.jpeg",
   },
   {
     name: "Mrs. Mansi Jamgaonkar",
@@ -32,7 +32,7 @@ const teachers = [
     subject: "Science",
     description:
       "Simplifies complex science concepts using visual learning, activities, and foundational explanations for better retention.",
-    image: "/assets/images/teacher-3.png",
+    image: "/assets/images/teacher-3.jpeg",
   },
   {
     name: "Mrs. Shital Nerkar",
@@ -40,7 +40,7 @@ const teachers = [
     subject: "Primary Head",
     description:
       "Focuses on early academic development with engaging teaching methods that build strong numeracy, literacy, and learning confidence.",
-    image: "/assets/images/teacher-4.png",
+    image: "/assets/images/teacher-4.jpeg",
   },
   {
     name: "Dr. Samiksha Mohite",
@@ -48,7 +48,7 @@ const teachers = [
     subject: "Biology",
     description:
       "Guides Biology students using real-life medical insights, conceptual depth, and board exam preparation techniques.",
-    image: "/assets/images/teacher-5.png",
+    image: "/assets/images/teacher-5.jpeg",
   },
 ];
 
@@ -90,7 +90,7 @@ const About = () => {
 
             <div className="flex flex-col items-center lg:items-start">
               <div className="w-full max-w-xl h-[420px] overflow-hidden rounded-2xl shadow-card-hover mb-4">
-                <img src="/assets/images/Founder.webp" className="w-full h-full object-cover" />
+                <img src="/assets/images/Founder.jpeg" className="w-full h-full object-cover" />
               </div>
 
               <p className="text-xl font-bold text-primary">Mrs. Swapnali More</p>

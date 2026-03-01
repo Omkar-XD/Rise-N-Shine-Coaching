@@ -22,8 +22,8 @@ const HeroSection = ({ onEnrollClick }: HeroSectionProps) => {
   const [activeImage, setActiveImage] = useState(0);
 
   const images = [
-    "/assets/images/hero-education.webp",
-    "/assets/images/Interact.webp",
+    "/assets/images/hero-education.jpeg",
+    "/assets/images/Interact.jpeg",
   ];
 
   // ✅ Preload images to prevent flicker

@@ -53,7 +53,7 @@ const HomePage = () => {
         <section className="px-6 lg:px-20 py-10 bg-white">
           <div className="max-w-5xl mx-auto">
             <img
-              src="/assets/images/Interact.webp"
+              src="/assets/images/Interact.jpeg"
               alt="Students in classroom at Rise N Shine Coaching"
               className="w-full max-w-4xl mx-auto aspect-[16/9] object-cover rounded-2xl shadow-card"
               loading="lazy"
