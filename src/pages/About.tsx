@@ -115,7 +115,7 @@ const About = () => {
         {/* Classroom */}
         <section className="px-6 lg:px-20 mb-20">
           <div className="max-w-5xl mx-auto">
-            <img src="/assets/images/about-classroom.webp" className="w-full aspect-[16/9] object-cover rounded-2xl shadow-card-hover" />
+            <img src="/assets/images/about-classroom.jpeg" className="w-full aspect-[16/9] object-cover rounded-2xl shadow-card-hover" />
           </div>
         </section>
 
