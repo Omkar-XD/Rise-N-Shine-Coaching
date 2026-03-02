@@ -153,12 +153,26 @@ const About = () => {
                   </div>
 
                   <div className="w-full md:w-1/2">
-                    <h3 className="text-xl font-bold text-primary">{teacher.name}</h3>
-                    <p className="text-accent font-semibold">({teacher.qualification})</p>
-                    <p className="text-accent font-semibold mb-2">({teacher.subject})</p>
-                    <p className="text-muted-foreground">{teacher.description}</p>
-                  </div>
+  <h3 className="text-xl font-bold text-primary">
+    {teacher.name}
+  </h3>
 
+  <p className="text-accent font-semibold">
+    {teacher.name === "Mrs. Ashvini katkar"
+      ? teacher.qualification
+      : `(${teacher.qualification})`}
+  </p>
+
+  {teacher.subject && (
+    <p className="text-accent font-semibold mb-2">
+      ({teacher.subject})
+    </p>
+  )}
+
+  <p className="text-muted-foreground">
+    {teacher.description}
+  </p>
+</div>
                 </div>
               );
             })}
