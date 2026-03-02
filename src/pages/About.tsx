@@ -45,7 +45,7 @@ const teachers = [
   {
     name: "Mrs. Ashvini katkar",
     qualification: "Msc",
-    subject: "",
+    
     description:
       "Provides academic guidance and student mentorship, supporting overall development through structured study planning, discipline building, and exam readiness strategies.",
     image: "/assets/images/teacher-5.jpeg",
