@@ -43,12 +43,20 @@ const teachers = [
     image: "/assets/images/teacher-4.jpeg",
   },
   {
+    name: "Mrs. Ashvini katkar",
+    qualification: "Msc",
+    subject: "",
+    description:
+      "Provides academic guidance and student mentorship, supporting overall development through structured study planning, discipline building, and exam readiness strategies.",
+    image: "/assets/images/teacher-5.jpeg",
+  },
+  {
     name: "Dr. Samiksha Mohite",
     qualification: "Doctor of Medicine",
     subject: "Biology",
     description:
       "Guides Biology students using real-life medical insights, conceptual depth, and board exam preparation techniques.",
-    image: "/assets/images/teacher-5.jpeg",
+    image: "/assets/images/teacher-6.jpeg",
   },
 ];
 
